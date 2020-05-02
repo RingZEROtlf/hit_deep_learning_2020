@@ -8,8 +8,9 @@ import torchvision.transforms as transforms
 from tensorboardX import SummaryWriter
 
 from datasets import Cifar10Dataset
-from models import AlexNet
 from experiment_helper import ExperimentHelper
+from models import AlexNet
+
 
 # build logger
 logger = logging.getLogger('lab2')
@@ -78,7 +79,6 @@ def train(model, train_loader, eval_loader, criterion, optimizer, args):
   best_accuracy = 0
   for epoch in range(args.num_epochs):
     for i, (images, labels) in enumerate(train_loader):
-      print(i)
       iteration += 1
       images = images.to(device)
       labels = labels.to(device)
