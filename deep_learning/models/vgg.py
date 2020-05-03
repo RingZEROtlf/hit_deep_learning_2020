@@ -79,24 +79,24 @@ def vgg11_bn(**kwargs):
 
 
 def vgg13(**kwargs):
-  return VGG(make_layers(cfgs['A']), **kwargs)
+  return VGG(make_layers(cfgs['B']), **kwargs)
 
 
 def vgg13_bn(**kwargs):
-  return VGG(make_layers(cfgs['A'], batch_norm=True), **kwargs)
+  return VGG(make_layers(cfgs['B'], batch_norm=True), **kwargs)
 
 
 def vgg16(**kwargs):
-  return VGG(make_layers(cfgs['A']), **kwargs)
+  return VGG(make_layers(cfgs['D']), **kwargs)
 
 
 def vgg16_bn(**kwargs):
-  return VGG(make_layers(cfgs['A'], batch_norm=True), **kwargs)
+  return VGG(make_layers(cfgs['D'], batch_norm=True), **kwargs)
 
 
 def vgg19(**kwargs):
-  return VGG(make_layers(cfgs['A']), **kwargs)
+  return VGG(make_layers(cfgs['E']), **kwargs)
 
 
 def vgg19_bn(**kwargs):
-  return VGG(make_layers(cfgs['A'], batch_norm=True), **kwargs)
+  return VGG(make_layers(cfgs['E'], batch_norm=True), **kwargs)
