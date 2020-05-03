@@ -1,10 +1,10 @@
 import torch
 import torch.nn as nn
 
-__all__ = ['AlexNet']
+__all__ = ['AlexNet', 'alexnet']
 
 class AlexNet(nn.Module):
-  def __init__(self, num_classes=10):
+  def __init__(self, num_classes=1000):
     super(AlexNet, self).__init__()
     self.features = nn.Sequential(
       nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1),
@@ -36,3 +36,7 @@ class AlexNet(nn.Module):
     x = x.view(x.size(0), 256 * 4 * 4)
     x = self.classifier(x)
     return x
+
+
+def alexnet(**kwargs):
+  return AlexNet(**kwargs)

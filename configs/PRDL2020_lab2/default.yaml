@@ -1,0 +1,41 @@
+common:
+  dataset_root: &dataset_root ~/dataset_repos
+  batch_size: &batch_size 100
+
+datasets: # Required
+  train:
+    type: deep_learning.datasets.Cifar10Dataset
+    kwargs:
+      root: *dataset_root
+      train: True
+    batch_size: *batch_size
+
+    transforms:
+      - type: torchvision.transforms.ToTensor
+        turn_on: True
+
+  test:
+    type: deep_learning.datasets.Cifar10Dataset
+    kwargs:
+      root: *dataset_root
+      train: False
+    batch_size: *batch_size
+
+    transforms:
+      - type: torchvision.transforms.ToTensor
+        turn_on: True
+
+net: # Required
+  type: deep_learning.models.alexnet
+  kwargs:
+    num_classes: 10
+
+trainer: # Required
+  max_epoch: 100
+  print_freq: 100
+  test_freq: 1
+
+  optimizer:
+    type: torch.optim.Adam
+    kwargs:
+      lr: 0.001

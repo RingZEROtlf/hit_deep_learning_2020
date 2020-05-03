@@ -6,6 +6,9 @@ import torch
 from PIL import Image
 
 
+__all__ = ['Cifar10Dataset']
+
+
 class Cifar10Dataset(torch.utils.data.Dataset):
   base_folder = 'cifar-10-batches-py'
   train_list = ['data_batch_' + str(idx) for idx in range(1, 6)]
