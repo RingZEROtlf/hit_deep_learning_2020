@@ -5,7 +5,6 @@ import numpy as np
 import torch
 from PIL import Image
 
-
 __all__ = ['Cifar10Dataset']
 
 

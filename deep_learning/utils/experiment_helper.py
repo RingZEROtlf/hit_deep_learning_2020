@@ -2,14 +2,17 @@ import os
 
 
 class ExperimentHelper(object):
-  def __init__(self, exp_root):
-    self._exp_root = exp_root
-    self.folders = {
-      'checkpoints': os.path.join(exp_root, 'checkpoints'),
-      'tb_logs': os.path.join(exp_root, 'tb_logs'),
+  def __init__(self, work_dir='./', exp_name='default'):
+    work_dir = os.path.expanduser(work_dir)
+
+    self._work_dir = work_dir
+    self._exp_root = os.path.join(work_dir, exp_name)
+    self._dirs = {
+      'checkpoints': os.path.join(work_dir, exp_name, 'checkpoints'),
+      'tb_logs': os.path.join(work_dir, 'runs', exp_name),
     }
 
-    for _, dirname in self.folders.items():
+    for _, dirname in self._dirs.items():
       if not os.path.isdir(dirname):
         os.makedirs(dirname, 0o775)
 
@@ -19,8 +22,8 @@ class ExperimentHelper(object):
 
   @property
   def checkpoints(self):
-    return self.folders['checkpoints']
+    return self._dirs['checkpoints']
 
   @property
   def tb_logs(self):
-    return self.folders['tb_logs']
+    return self._dirs['tb_logs']

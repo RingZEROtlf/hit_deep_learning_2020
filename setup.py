@@ -1,6 +1,5 @@
 from setuptools import find_packages, setup
 
-
 setup(
   name='deep_learning',
   version='0.1.0',
@@ -9,7 +8,11 @@ setup(
   description='Pytorch Implementation for PRDL 2020 Labs for HIT',
   author_email='RingZEROtlf@outlook.com',
   package_data={
-    '': ['configs/PRDL2020_lab2/*.yaml']
+    '': [
+      'configs/PRDL2020_lab1/*.yaml',
+      'configs/PRDL2020_lab2/*.yaml',
+      'configs/PRDL2020_lab3/*.yaml',
+    ],
   },
   packages=find_packages(exclude=(
     'scripts',
