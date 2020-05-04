@@ -23,4 +23,4 @@ def _main(args):
     config = yaml.load(f, Loader=yaml.FullLoader)
 
   task_helper = TaskHelper(config, exp_name=args.exp_name)
-  task_helper.get_summary()
+  task_helper.train()

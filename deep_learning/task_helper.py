@@ -1,5 +1,6 @@
 import copy
 import os
+import yaml
 
 import torch
 import torchscan
@@ -79,6 +80,8 @@ class TaskHelper(object):
     self.optimizer = import_helper(config['type'], config.get('kwargs', {}))
 
   def train(self):
+    with open(os.path.join(self.exp_helper.exp_root, 'config.yaml'), 'w') as f:
+      f.write(yaml.dump(self.config))
     cfg_trainer = copy.deepcopy(self.config['trainer'])
     summary_writer = SummaryWriter(self.exp_helper.tb_logs)
 
@@ -125,6 +128,7 @@ class TaskHelper(object):
           torch.save(self.model.state_dict(), 
                     os.path.join(self.exp_helper.exp_root, 
                                  'best_model.ckpt'))
+    summary_writer.close()
 
   def evaluate(self):
     self.model.eval()
