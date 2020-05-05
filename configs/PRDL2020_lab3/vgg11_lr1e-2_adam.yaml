@@ -39,7 +39,7 @@ trainer: # Required
   optimizer:
     type: torch.optim.Adam
     kwargs:
-      lr: 0.001
+      lr: 0.01
 
   lr_scheduler:
     type: torch.optim.lr_scheduler.StepLR

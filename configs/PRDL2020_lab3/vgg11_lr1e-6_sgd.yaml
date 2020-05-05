@@ -37,9 +37,11 @@ trainer: # Required
   test_freq: 4
 
   optimizer:
-    type: torch.optim.Adam
+    type: torch.optim.SGD
     kwargs:
-      lr: 0.001
+      lr: 0.000001
+      momentum: 0.9
+      nesterov: True
 
   lr_scheduler:
     type: torch.optim.lr_scheduler.StepLR
