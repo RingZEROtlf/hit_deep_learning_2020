@@ -29,9 +29,10 @@ class TaskHelper(object):
     # build model
     self.model = self.build_model().to(self.device)
 
-    # build loss and optimizer
+    # build loss, optimizer and lr_scheduler
     self.criterion = torch.nn.CrossEntropyLoss()
     self._build_optimizer()
+    self._build_lr_scheduler()
 
   def get_summary(self):
     torchscan.summary(self.model, self.get_dummy_input()[0].shape[1:])
@@ -76,8 +77,13 @@ class TaskHelper(object):
 
   def _build_optimizer(self):
     config = copy.deepcopy(self.config['trainer']['optimizer'])
-    config.get('kwargs', {})['params'] = self.model.parameters()
-    self.optimizer = import_helper(config['type'], config.get('kwargs', {}))
+    config['kwargs']['params'] = self.model.parameters()
+    self.optimizer = import_helper(config['type'], config['kwargs'])
+
+  def _build_lr_scheduler(self):
+    config = copy.deepcopy(self.config['trainer']['lr_scheduler'])
+    config['kwargs']['optimizer'] = self.optimizer
+    self.lr_scheduler = import_helper(config['type'], config['kwargs'])
 
   def train(self):
     with open(os.path.join(self.exp_helper.exp_root, 'config.yaml'), 'w') as f:
@@ -93,6 +99,7 @@ class TaskHelper(object):
     for epoch in range(cfg_trainer['max_epoch']):
       for i, (images, labels) in enumerate(self.train_loader):
         iteration += 1
+        current_lr = self.lr_scheduler.get_lr()[0]
         images = images.to(self.device)
         labels = labels.to(self.device)
 
@@ -104,6 +111,8 @@ class TaskHelper(object):
         self.optimizer.zero_grad()
         loss.backward()
         summary_writer.add_scalar('loss', loss.item(), iteration)
+        summary_writer.add_scalar('lr', current_lr, iteration)
+        self.lr_scheduler.step()
         self.optimizer.step()
 
         if iteration % cfg_trainer['print_freq'] == 0:
