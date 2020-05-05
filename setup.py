@@ -9,7 +9,6 @@ setup(
   author_email='RingZEROtlf@outlook.com',
   package_data={
     '': [
-      'configs/PRDL2020_lab1/*.yaml',
       'configs/PRDL2020_lab2/*.yaml',
       'configs/PRDL2020_lab3/*.yaml',
     ],
