@@ -1,6 +1,6 @@
 common:
   dataset_root: &dataset_root ~/dataset_repos
-  batch_size: &batch_size 100
+  batch_size: &batch_size 64
 
 datasets: # Required
   train:
@@ -32,11 +32,11 @@ net: # Required
     num_classes: 10
 
 trainer: # Required
-  max_epoch: 100
+  max_epoch: 64
   print_freq: 100
-  test_freq: 5
+  test_freq: 4
 
   optimizer:
     type: torch.optim.Adam
     kwargs:
-      lr: 0.001
+      lr: 0.0001
