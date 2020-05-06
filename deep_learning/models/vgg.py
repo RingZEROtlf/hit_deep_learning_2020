@@ -1,10 +1,12 @@
 import torch
 import torch.nn as nn
 
+from deep_learning.models.se_module import SELayer
+
 __all__ = [
-  'VGG', 'vgg11', 'vgg11_bn', 'vgg13', 'vgg13_bn', 'vgg16', 'vgg16_bn',
-  'vgg19', 'vgg19_bn',
-]
+  'VGG', 'vgg11', 'vgg11_bn', 'vgg13', 'vgg13_bn', 'vgg16', 'vgg16_bn', 'vgg19', 'vgg19_bn',
+  'se_vgg11', 'se_vgg11_bn', 'se_vgg13', 'se_vgg13_bn', 'se_vgg16', 'se_vgg16_bn',
+  'se_vgg19', 'se_vgg19_bn']
 
 
 class VGG(nn.Module):
@@ -42,10 +44,11 @@ class VGG(nn.Module):
         nn.init.constant_(m.bias, 0)
       elif isinstance(m, nn.Linear):
         nn.init.normal_(m.weight, 0, 0.01)
-        nn.init.constant_(m.bias, 0)
+        if m.bias is not None:
+          nn.init.constant_(m.bias, 0)
 
 
-def make_layers(cfg, batch_norm=False):
+def make_layers(cfg, batch_norm=False, use_seblock=False):
   layers = []
   in_channels = 3
   out_channels = [64, 128, 256, 512, 512]
@@ -57,6 +60,8 @@ def make_layers(cfg, batch_norm=False):
       else:
         layers += [conv2d, nn.ReLU(inplace=True)]
       in_channels = out_channels[i]
+    if use_seblock:
+      layers += [SELayer(in_channels, reduction=16)]
     layers += [nn.MaxPool2d(kernel_size=2, stride=1)]
   return nn.Sequential(*layers)
 
@@ -99,3 +104,43 @@ def vgg19(**kwargs):
 
 def vgg19_bn(**kwargs):
   return VGG(make_layers(cfgs['E'], batch_norm=True), **kwargs)
+
+
+def se_vgg11(**kwargs):
+  return VGG(make_layers(cfgs['A'], use_seblock=True), 
+             **kwargs)
+
+
+def se_vgg11_bn(**kwargs):
+  return VGG(make_layers(cfgs['A'], batch_norm=True, use_seblock=True),
+             **kwargs)
+
+
+def se_vgg13(**kwargs):
+  return VGG(make_layers(cfgs['B'], use_seblock=True), 
+             **kwargs)
+
+
+def se_vgg13_bn(**kwargs):
+  return VGG(make_layers(cfgs['B'], batch_norm=True, use_seblock=True), 
+             **kwargs)
+
+
+def se_vgg16(**kwargs):
+  return VGG(make_layers(cfgs['D'], use_seblock=True), 
+             **kwargs)
+
+
+def se_vgg16_bn(**kwargs):
+  return VGG(make_layers(cfgs['D'], batch_norm=True, use_seblock=True), 
+             **kwargs)
+
+
+def se_vgg19(**kwargs):
+  return VGG(make_layers(cfgs['E'], use_seblock=True), 
+             **kwargs)
+
+
+def se_vgg19_bn(**kwargs):
+  return VGG(make_layers(cfgs['E'], batch_norm=True, use_seblock=True), 
+             **kwargs)
