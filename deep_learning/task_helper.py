@@ -3,7 +3,6 @@ import os
 import yaml
 
 import torch
-import torchscan
 import torchvision
 from tensorboardX import SummaryWriter
 
@@ -33,9 +32,6 @@ class TaskHelper(object):
     self.criterion = torch.nn.CrossEntropyLoss()
     self._build_optimizer()
     self._build_lr_scheduler()
-
-  def get_summary(self):
-    torchscan.summary(self.model, self.get_dummy_input()[0].shape[1:])
 
   def get_model(self):
     return self.model
@@ -99,7 +95,7 @@ class TaskHelper(object):
     for epoch in range(cfg_trainer['max_epoch']):
       for i, (images, labels) in enumerate(self.train_loader):
         iteration += 1
-        current_lr = self.lr_scheduler.get_lr()[0]
+        current_lr = self.lr_scheduler.get_last_lr()
         images = images.to(self.device)
         labels = labels.to(self.device)
 
@@ -112,11 +108,11 @@ class TaskHelper(object):
         loss.backward()
         summary_writer.add_scalar('loss', loss.item(), iteration)
         summary_writer.add_scalar('lr', current_lr, iteration)
-        self.lr_scheduler.step()
         self.optimizer.step()
+        self.lr_scheduler.step()
 
         if iteration % cfg_trainer['print_freq'] == 0:
-          self.logger.info('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}'
+          self.logger.info('Epoch [{}/{}], Step [{}/{}], Loss: {:.8f}'
             .format(epoch+1, cfg_trainer['max_epoch'], 
                     i+1, len(self.train_loader), 
                     loss.item()))

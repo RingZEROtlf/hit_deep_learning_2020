@@ -1,0 +1,75 @@
+common:
+  dataset_root: &dataset_root ~/dataset_repos
+  batch_size: &batch_size 64
+
+  cifar_norm_mean: &cifar_norm_mean [0.49139968, 0.48215827, 0.44653124]
+  cifar_norm_std: &cifar_norm_std [0.24703233, 0.24348505, 0.26158768]
+
+  augumentations:
+    - &aug_totensor_norm
+      - type: torchvision.transforms.ToTensor
+        turn_on: True
+      - type: torchvision.transforms.Normalize
+        turn_on: True
+        kwargs:
+          mean: *cifar_norm_mean
+          std:  *cifar_norm_std
+
+    - &aug_standard
+      - type: torchvision.transforms.RandomCrop
+        turn_on: True
+        kwargs:
+          size: 32
+          padding: 4
+      - type: torchvision.transforms.RandomHorizontalFlip
+        turn_on: True
+      - type: torchvision.transforms.ToTensor
+        turn_on: True
+      - type: torchvision.transforms.Normalize
+        turn_on: True
+        kwargs:
+          mean: *cifar_norm_mean
+          std:  *cifar_norm_std
+
+datasets: # Required
+  train:
+    type: deep_learning.datasets.Cifar10Dataset
+    kwargs:
+      root: *dataset_root
+      train: True
+    batch_size: *batch_size
+
+    transforms: *aug_standard
+
+  test:
+    type: deep_learning.datasets.Cifar10Dataset
+    kwargs:
+      root: *dataset_root
+      train: False
+    batch_size: *batch_size
+
+    transforms: *aug_totensor_norm
+
+net: # Required
+  input_shapes: [[1, 3, 32, 32],]
+  type: deep_learning.models.vgg11_bn
+  kwargs:
+    num_classes: 10
+
+trainer: # Required
+  max_epoch: 128
+  print_freq: 100
+  test_freq: 4
+
+  optimizer:
+    type: torch.optim.SGD
+    kwargs:
+      lr: 0.01
+      momentum: 0.9
+      nesterov: True
+
+  lr_scheduler:
+    type: torch.optim.lr_scheduler.StepLR
+    kwargs:
+      step_size: 25000
+      gamma: 0.1

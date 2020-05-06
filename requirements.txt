@@ -3,4 +3,3 @@ torchvision
 tensorboardX
 tensorflow
 pyyaml
-torchscan
