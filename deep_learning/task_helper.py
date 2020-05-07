@@ -28,7 +28,6 @@ class TaskHelper(object):
     else:
       self.use_fp16 = False
 
-
     # check device
     if self.config['use_cuda']:
       self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
