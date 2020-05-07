@@ -26,7 +26,5 @@ def _main(args):
   config['use_cuda'] = not args.no_cuda
   config['use_fp16'] = args.fp16
 
-  print(config['use_cuda'], config['use_fp16'])
-
   task_helper = TaskHelper(config, exp_name=args.exp_name)
-  # task_helper.train()
+  task_helper.train()
