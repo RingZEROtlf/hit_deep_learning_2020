@@ -11,6 +11,10 @@ setup(
     '': [
       'configs/PRDL2020_lab2/*.yaml',
       'configs/PRDL2020_lab3/*.yaml',
+      'configs/PRDL2020_lab3_aug/*.yaml',
+      'configs/PRDL2020_lab3_resnet/*.yaml',
+      'configs/PRDL2020_lab3_seblock/*.yaml',
+      'configs/PRDL2020_lab3_vgg/*.yaml',
     ],
   },
   packages=find_packages(exclude=(
