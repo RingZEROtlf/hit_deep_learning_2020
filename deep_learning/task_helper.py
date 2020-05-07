@@ -19,14 +19,27 @@ class TaskHelper(object):
     self.exp_helper = ExperimentHelper(work_dir=work_dir, exp_name=exp_name)
     self.logger = default_logger
 
+    # check fp16
+    if self.config['use_fp16']:
+      if not self.config['use_cuda'] or not torch.cuda.is_available():
+        raise RuntimeError('using fp16 but no cuda available')
+      else:
+        self.use_fp16 = True
+
+
     # check device
-    self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    if self.config['use_cuda']:
+      self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    else:
+      self.device = torch.device('cpu')
 
     # build dataloaders
     self._build_dataloaders()
 
     # build model
     self.model = self.build_model().to(self.device)
+    if self.use_fp16:
+      self.model = self.model.half()
 
     # build loss, optimizer and lr_scheduler
     self.criterion = torch.nn.CrossEntropyLoss()
@@ -97,6 +110,8 @@ class TaskHelper(object):
         iteration += 1
         current_lr = self.lr_scheduler.get_last_lr()
         images = images.to(self.device)
+        if self.use_fp16:
+          images = images.half()
         labels = labels.to(self.device)
 
         # forward
@@ -141,6 +156,8 @@ class TaskHelper(object):
       correct, total = 0, 0
       for images, labels in self.test_loader:
         images = images.to(self.device)
+        if self.use_fp16:
+          images = images.half()
         labels = labels.to(self.device)
         outputs = self.model(images)
         _, predicted = torch.max(outputs.data, 1)
