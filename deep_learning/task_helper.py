@@ -25,6 +25,8 @@ class TaskHelper(object):
         raise RuntimeError('using fp16 but no cuda available')
       else:
         self.use_fp16 = True
+    else:
+      self.use_fp16 = False
 
 
     # check device
